@@ -1,0 +1,31 @@
+% Build from the repository root:  tectonic report/main.tex
+% Each section file in sections/ has one owner; this file belongs to the editor.
+% Write one sentence per line: git merges line by line, so two people editing
+% different sentences of one paragraph never conflict.
+% Five pages of content at most after the cover page; appendices are not read.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{generated/}}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{\fill}
+  {\Large DataLab --- Assignment 1: Collaborative filtering\par}
+  \vspace{1.5em}
+  {\large Group 21\par}
+  \vspace{1em}
+  Foucault Bernard \quad Naomi Bronstein \quad Martin Jessenne \par
+  \vspace*{\fill}
+\end{titlepage}
+
+% One \input{sections/<name>} per section, in report order.
+
+\end{document}
