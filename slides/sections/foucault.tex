@@ -1,43 +1,25 @@
-% Owner: Foucault. Matrix factorisation trained by gradient descent: the method, then its results.
+% Owner: Foucault. One slide: matrix factorisation trained by gradient descent, its hyperparameters, its scores.
 
 \begin{frame}{Matrix factorisation by gradient descent}
-  \begin{itemize}
-    \item Model: $\hat r_{ui} = \mu + b_u + b_i + p_u^\top q_i$, with $p_u, q_i \in \mathbb{R}^k$.
-    \item Loss on the observed cells $\Omega$:
-      \[
-        \sum_{(u,i) \in \Omega} (r_{ui} - \hat r_{ui})^2 + \lambda \left( \|P\|^2 + \|Q\|^2 \right) + \lambda_b \left( \|b_{\text{user}}\|^2 + \|b_{\text{item}}\|^2 \right)
-      \]
-    \item Mini-batch SGD (256 ratings), learning rate $\eta$, $\mathcal{N}(0, 0.1)$ initialisation.
-    \item Full-batch steps are dominated by heavy users: one $\eta$ cannot suit a user with 1\,000 ratings and one with 1.
-    \item The penalty is spread as $\lambda / n_u$ over each rating of $u$, so $\lambda$ means the same as in ALS.
-    \item Tuned on the 5 folds: $k$, $\lambda$, $\lambda_b$, $\eta$, number of epochs.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Gradient descent: regularisation does the work}
   \begin{columns}[T]
-    \begin{column}{0.45\textwidth}
-      \centering
-      \includegraphics[width=0.9\linewidth]{gd/rmse_epochs.pdf}\\
-      {\footnotesize Small $\lambda$: validation RMSE rises after 7 epochs.}
+    \begin{column}{0.55\textwidth}
+      \small
+      \begin{itemize}
+        \item Model: $\hat r_{ui} = \mu + b_u + b_i + p_u^\top q_i$, with $p_u, q_i \in \mathbb{R}^k$.
+        \item Loss on the observed cells $\Omega$:
+          \[
+            \sum_{\Omega} (r_{ui} - \hat r_{ui})^2 + \lambda \left( \|P\|^2 + \|Q\|^2 \right) + \lambda_b \|b\|^2
+          \]
+        \item Mini-batch SGD (256 ratings): full-batch steps are dominated by users with many ratings.
+        \item Chosen on the 5 folds: $k = 10$, $\lambda = 10$, $\lambda_b = 3$, $\eta = 0.02$, 80 epochs.
+        \item 5-fold RMSE $0.882 \pm 0.007$ (ALS $0.888$, biases $0.884$); test RMSE $0.874$; 1.8\,s.
+        \item Without $p_u^\top q_i$: $0.883$. The factors barely help at 1\,\% density.
+      \end{itemize}
     \end{column}
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.43\textwidth}
       \centering
-      \includegraphics[width=0.9\linewidth]{gd/rmse_lambda.pdf}\\
-      {\footnotesize Early stopping helps, but does not replace $\lambda$.}
+      \includegraphics[width=\linewidth]{gd/rmse_epochs.pdf}\\
+      {\footnotesize Small $\lambda$ overfits after 7 epochs.}
     \end{column}
   \end{columns}
-  \vspace{0.3em}
-  \centering
-  \scriptsize
-  \begin{tabular}{lccc}
-    \toprule
-    Model & 5-fold RMSE & Test RMSE & Fit time \\
-    \midrule
-    Global mean & 1.033 & 1.037 & -- \\
-    Biases ($\lambda_b = 5$) & 0.884 & -- & 0.9\,s \\
-    ALS ($k = 10$, $\lambda = 10$) & 0.888 & 0.878 & 5\,s \\
-    GD ($k = 10$, $\lambda = 10$, $\lambda_b = 3$, 80 epochs) & \textbf{0.882} & \textbf{0.874} & 1.8\,s \\
-    \bottomrule
-  \end{tabular}
 \end{frame}
