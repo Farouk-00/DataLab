@@ -1,0 +1,19 @@
+% Shared by the whole group: the task, the data and the evaluation protocol.
+
+\begin{frame}{Task and data}
+  \begin{itemize}
+    \item Complete a users $\times$ movies rating matrix $R \in \{0.5, 1, \dots, 5\}^{610 \times 4980}$, unobserved cells marked NaN.
+    \item \texttt{ratings\_train}: 31\,598 observed ratings, 1.04\,\% of the cells; \texttt{ratings\_test}: as many, on disjoint cells.
+    \item Every method is a model with one method, \texttt{complete(R, rng)}, that predicts every cell from the visible ones.
+    \item Scored by RMSE and exact-rating accuracy on hidden cells, predictions clipped to $[0.5, 5]$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{One protocol for every method}
+  \begin{itemize}
+    \item 5 folds over the observed cells of \texttt{ratings\_train}, fixed seed: every rating is hidden and predicted exactly once.
+    \item The same folds for everyone, so two methods are compared on the same hidden ratings.
+    \item Hyperparameters are chosen on the folds; \texttt{ratings\_test} is used once per method, to report, never to choose.
+    \item Out-of-fold predictions of each final model are kept: the blend of the methods is learned on them.
+  \end{itemize}
+\end{frame}

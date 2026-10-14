@@ -1,0 +1,36 @@
+% Build from the repository root:  tectonic slides/main.tex
+% The submitted copy is slides.pdf at the repository root, on main only.
+% Each file in sections/ is one part of the talk; methodology is shared, the
+% others belong to their presenter. Edit your own file, not this one, so the
+% branches merge without conflict.
+% Write one sentence or bullet per line: git merges line by line.
+% Preliminary round: 5 minutes, 1--2 methodology slides, then one slide per method.
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\graphicspath{{../report/generated/}}
+
+\title{Collaborative filtering}
+\subtitle{DataLab --- Assignment 1}
+\author{Foucault Bernard \and Naomi Bronstein \and Martin Jessenne}
+\institute{Group 21}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\input{sections/methodology}
+\input{sections/foucault}
+\input{sections/naomi}
+\input{sections/martin}
+
+\end{document}

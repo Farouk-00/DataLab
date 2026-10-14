@@ -2,8 +2,9 @@
 __pycache__/
 # The course files and generate.py's output.npy, all at the root
 /*.npy
-# Local W&B run folders, the report built locally
+# Local W&B run folders, the report and slides built locally
 wandb/
 /report/main.pdf
+/slides/main.pdf
 # Out-of-fold predictions and other regenerable outputs
 outputs/
