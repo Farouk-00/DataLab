@@ -1,25 +1,23 @@
-% Owner: Foucault. One slide: matrix factorisation trained by gradient descent, its hyperparameters, its scores.
+% Owner: Foucault. One slide: matrix factorisation trained by gradient descent, the method only.
 
 \begin{frame}{Matrix factorisation by gradient descent}
-  \begin{columns}[T]
-    \begin{column}{0.55\textwidth}
-      \small
+  \begin{itemize}
+    \item Model: $\hat r_{ui} = \mu + b_u + b_i + p_u^\top q_i$
       \begin{itemize}
-        \item Model: $\hat r_{ui} = \mu + b_u + b_i + p_u^\top q_i$, with $p_u, q_i \in \mathbb{R}^k$.
-        \item Loss on the observed cells $\Omega$:
-          \[
-            \sum_{\Omega} (r_{ui} - \hat r_{ui})^2 + \lambda \left( \|P\|^2 + \|Q\|^2 \right) + \lambda_b \|b\|^2
-          \]
-        \item Mini-batch SGD (256 ratings): full-batch steps are dominated by users with many ratings.
-        \item Chosen on the 5 folds: $k = 10$, $\lambda = 10$, $\lambda_b = 3$, $\eta = 0.02$, 80 epochs.
-        \item 5-fold RMSE $0.882 \pm 0.007$ (ALS $0.888$, biases $0.884$); test RMSE $0.874$; 1.8\,s.
-        \item Without $p_u^\top q_i$: $0.883$. The factors barely help at 1\,\% density.
+        \item $\mu$: mean rating; $b_u$, $b_i$: user and movie biases;
+        \item $p_u, q_i \in \mathbb{R}^k$: latent tastes of user $u$ and profile of movie $i$.
       \end{itemize}
-    \end{column}
-    \begin{column}{0.43\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{gd/rmse_epochs.pdf}\\
-      {\footnotesize Small $\lambda$ overfits after 7 epochs.}
-    \end{column}
-  \end{columns}
+    \item Loss on the observed cells $\Omega$:
+      \[
+        L = \sum_{(u,i) \in \Omega} (r_{ui} - \hat r_{ui})^2 + \lambda \left( \|P\|^2 + \|Q\|^2 \right) + \lambda_b \left( \|b_{\text{user}}\|^2 + \|b_{\text{item}}\|^2 \right)
+      \]
+    \item Mini-batch stochastic gradient descent, with $e_{ui} = r_{ui} - \hat r_{ui}$ and step $\eta$:
+      \[
+        p_u \leftarrow p_u + \eta \left( e_{ui}\, q_i - \tfrac{\lambda}{n_u}\, p_u \right),
+        \qquad
+        q_i \leftarrow q_i + \eta \left( e_{ui}\, p_u - \tfrac{\lambda}{n_i}\, q_i \right)
+      \]
+    \item Mini-batches rather than full batch: one step size cannot suit a user with 1\,000 ratings and one with 1.
+    \item Hyperparameters $k$, $\lambda$, $\lambda_b$, $\eta$ and the number of epochs, tuned on the 5 folds.
+  \end{itemize}
 \end{frame}
