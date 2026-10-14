@@ -1,6 +1,6 @@
 """Official 5-fold score, out-of-fold predictions and the one final_split evaluation of the chosen GD.
 
-Run from the repository root: python3 -m scripts.final_gd
+Run from the repository root: python3 -m scripts.foucault.final_gd
 """
 
 from __future__ import annotations
@@ -12,18 +12,19 @@ import numpy as np
 
 from cf.data import load_ratings
 from cf.models.gd import GD
-from cf.protocol import PROTOCOL_VERSION, cross_validate, evaluate, final_split
+from cf.protocol import cross_validate, evaluate, final_split
+from scripts.foucault.provenance import provenance
 
 SEED = 0
 OUT = Path("outputs/gd")
-# Chosen on the 5 folds (scripts/tune_gd.py), never on the test set.
+# Chosen on the 5 folds (scripts/foucault/tune_gd.py), never on the test set.
 CHOSEN = GD(k=10, lam=10.0, bias_reg=3.0, lr=0.03, n_epochs=150, weight_decay=1.0)
 ABLATION = GD(k=0, lam=10.0, bias_reg=3.0, lr=0.03, n_epochs=150, weight_decay=1.0)  # same model without p_u · q_i
 
 if __name__ == "__main__":
     R_train, R_test = load_ratings("ratings_train.npy"), load_ratings("ratings_test.npy")
     OUT.mkdir(parents=True, exist_ok=True)
-    record = {"protocol_version": PROTOCOL_VERSION, "seed": SEED}
+    record = provenance(SEED)
     for name, model in [("gd", CHOSEN), ("gd_k0", ABLATION)]:
         cv = cross_validate(model, R_train, SEED)
         record[name] = {"model": repr(model), "cv": cv.summary()}

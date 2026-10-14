@@ -1,6 +1,6 @@
 """Figures of the GD slides and report section, from outputs/gd/grid_lam.json.
 
-Run from the repository root: python3 -m scripts.plot_gd
+Run from the repository root: python3 -m scripts.foucault.plot_gd
 """
 
 from __future__ import annotations

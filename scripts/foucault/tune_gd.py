@@ -2,7 +2,7 @@
 
 Training for n epochs is a prefix of training for more (same rng draws), so
 one run of max_epochs gives the 5-fold RMSE at every number of epochs.
-Run from the repository root: python3 -m scripts.tune_gd
+Run from the repository root: python3 -m scripts.foucault.tune_gd
 """
 
 from __future__ import annotations
@@ -17,7 +17,8 @@ import numpy as np
 
 from cf.data import load_ratings
 from cf.models.gd import GD
-from cf.protocol import PROTOCOL_VERSION, kfold_splits
+from cf.protocol import kfold_splits
+from scripts.foucault.provenance import provenance
 
 SEED = 0
 OUT = Path("outputs/gd")
@@ -53,13 +54,14 @@ def main(grid_name: str) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     grid = grids[grid_name]
     results = []
+    origin = provenance(SEED)
     for values in itertools.product(*grid.values()):
         params = dict(zip(grid, values))
         c = curves(GD(**params), splits)
         best = int(np.argmin(c["valid"]))
         print(f"{params}  best epoch {best + 1}: {c['valid'][best]:.4f} ± {c['valid_std'][best]:.4f}"
               f"  last: {c['valid'][-1]:.4f}  {c['seconds']:.1f} s", flush=True)
-        results.append({"params": params, **c, "protocol_version": PROTOCOL_VERSION, "seed": SEED})
+        results.append({"params": params, **c, **origin})
     (OUT / f"grid_{grid_name}.json").write_text(json.dumps(results))
 
 
