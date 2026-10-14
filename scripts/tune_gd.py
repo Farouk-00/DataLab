@@ -1,4 +1,4 @@
-"""Tune GD on the 5 folds: validation RMSE after each epoch, for a grid of configurations.
+"""Tune GD (full-batch AdamW) on the 5 folds: validation RMSE after each epoch, for a grid of configurations.
 
 Training for n epochs is a prefix of training for more (same rng draws), so
 one run of max_epochs gives the 5-fold RMSE at every number of epochs.
@@ -43,12 +43,11 @@ def curves(model: GD, splits) -> dict:
 
 def main(grid_name: str) -> None:
     grids = {
-        "lr": dict(k=[10], lam=[10.0], lr=[0.002, 0.005, 0.01, 0.02, 0.05], n_epochs=[100]),
-        "lam": dict(k=[10], lam=[0.1, 1.0, 3.0, 5.0, 10.0, 15.0, 25.0, 50.0], lr=[0.02], n_epochs=[100]),
-        "k": dict(k=[2, 5, 10, 20, 50], lam=[10.0], lr=[0.02], n_epochs=[100]),
-        "joint": dict(k=[10], lam=[5.0, 10.0, 15.0, 20.0, 30.0], lr=[0.02], n_epochs=[100], bias_reg=[2.0, 3.0, 4.0]),
-        "lam3": dict(k=[10], lam=[0.1, 1.0, 3.0, 5.0, 7.0, 10.0, 15.0, 20.0, 30.0], lr=[0.02], n_epochs=[100], bias_reg=[3.0]),
-        "bias": dict(k=[10], lam=[10.0], lr=[0.02], n_epochs=[100], bias_reg=[1.0, 3.0, 5.0, 10.0]),
+        "lr": dict(lr=[0.003, 0.01, 0.03, 0.1], n_epochs=[300]),
+        "lam": dict(lam=[1.0, 3.0, 5.0, 7.0, 10.0, 15.0, 20.0, 30.0], lr=[0.03], n_epochs=[300]),
+        "bias": dict(bias_reg=[1.0, 2.0, 3.0, 5.0, 10.0], lr=[0.03], n_epochs=[300]),
+        "k": dict(k=[0, 2, 5, 10, 20, 50], lr=[0.03], n_epochs=[300]),
+        "wd": dict(weight_decay=[0.0, 0.1, 1.0, 10.0], lr=[0.03], n_epochs=[300]),
     }
     splits = kfold_splits(load_ratings("ratings_train.npy"))
     OUT.mkdir(parents=True, exist_ok=True)

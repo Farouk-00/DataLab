@@ -17,8 +17,8 @@ from cf.protocol import PROTOCOL_VERSION, cross_validate, evaluate, final_split
 SEED = 0
 OUT = Path("outputs/gd")
 # Chosen on the 5 folds (scripts/tune_gd.py), never on the test set.
-CHOSEN = GD(k=10, lam=10.0, bias_reg=3.0, lr=0.02, n_epochs=80)
-ABLATION = GD(k=0, lam=10.0, bias_reg=3.0, lr=0.02, n_epochs=80)  # same model without p_u · q_i
+CHOSEN = GD(k=10, lam=10.0, bias_reg=3.0, lr=0.03, n_epochs=150, weight_decay=1.0)
+ABLATION = GD(k=0, lam=10.0, bias_reg=3.0, lr=0.03, n_epochs=150, weight_decay=1.0)  # same model without p_u · q_i
 
 if __name__ == "__main__":
     R_train, R_test = load_ratings("ratings_train.npy"), load_ratings("ratings_test.npy")
