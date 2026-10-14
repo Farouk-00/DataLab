@@ -12,12 +12,7 @@
       \[
         L = \sum_{(u,i) \in \Omega} (r_{ui} - \hat r_{ui})^2 + \lambda \left( \|P\|^2 + \|Q\|^2 \right) + \lambda_b \left( \|b_{\text{user}}\|^2 + \|b_{\text{item}}\|^2 \right)
       \]
-    \item Full-batch gradient $g = \nabla_\theta L$, AdamW step for each parameter $\theta$:
-      \[
-        m \leftarrow \beta_1 m + (1 - \beta_1)\, g, \qquad
-        v \leftarrow \beta_2 v + (1 - \beta_2)\, g^2, \qquad
-        \theta \leftarrow \theta - \eta \left( \frac{\hat m}{\sqrt{\hat v} + \varepsilon} + w\, \theta \right)
-      \]
+    \item Optimiser: AdamW on the full-batch gradient of $L$, step $\eta$, weight decay $w$.
     \item The step adapts to each parameter: users with 1\,000 ratings and with 1 learn at the same pace.
     \item $\lambda$ stays in the loss: the decay $w$ shrinks a movie rated once as much as one rated 300 times.
     \item Hyperparameters $k$, $\lambda$, $\lambda_b$, $\eta$, $w$ and the number of epochs, tuned on the 5 folds.
